@@ -1,15 +1,13 @@
 import './styles.css';
 import cartTpl from './cartMarkup.hbs';
 import apiService from './js/apiService'
-
-const url = "https://pixabay.com/api/?image_type=photo&orientation=horizontal";
-const apiKey = '18694203-d22239baec913b213273a87a8';
+import { debounce } from 'lodash';
 const listRef = document.querySelector('.gallery');
 const inputRef = document.querySelector('input');
 const loadMoreBtnRef = document.querySelector('[data-action=load-more]');
 
 
-inputRef.addEventListener('input', event => {
+const debouncedCallback = _.debounce(event => {
     apiService.query = inputRef.value;
     listRef.innerHTML = '';
 
@@ -18,7 +16,9 @@ inputRef.addEventListener('input', event => {
     
     getImages();
     
-});
+}, 500);
+
+inputRef.addEventListener('input', debouncedCallback);
 
 loadMoreBtnRef.addEventListener('click', getImages);
 
@@ -38,8 +38,14 @@ function getImages() {
 }
 
 function updateMarkup(hits) {
-    const cartMarkup = cartTpl(hits);
-    listRef.insertAdjacentHTML('beforeend', cartMarkup);
+    if (!inputRef.value.length) {
+        return;
+    } else if (hits.length === 0) {
+        alert('Ничего не найдено');
+        return;
+    } else {const cartMarkup = cartTpl(hits);
+    listRef.insertAdjacentHTML('beforeend', cartMarkup);}
+   
 }
 
 

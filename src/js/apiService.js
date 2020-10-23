@@ -7,7 +7,7 @@ export default {
     inputQuery: '',
     page: 1,
     fetchImages() {
-    return fetch(`${url}&q=${this.query}&page=1&per_page=12&key=${apiKey}&page=${this.page}`)
+    return fetch(`${url}&q=${this.query}&page=1&per_page=20&key=${apiKey}&page=${this.page}`)
         .then(res => res.json())
         .then(({ hits }) => {
             this.page += 1;
